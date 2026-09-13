@@ -13,7 +13,6 @@ import {
   Sparkles,
   AlertCircle,
 } from "lucide-react";
-import Link from "next/link";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -21,24 +20,24 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setIsLoading(true);
-
-    // Fake loading (no real auth)
-    await new Promise((resolve) => setTimeout(resolve, 1200));
 
     if (!email || !password) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
+    // Fake loading (no real auth)
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1200));
 
     // Just simulate success
     setIsLoading(false);
-    alert("Login successful (this is just a demo for the intern task)");
+    setSuccess(true);
   }
 
   return (
@@ -56,9 +55,15 @@ export function LoginForm() {
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError(null);
+                setSuccess(false);
+              }}
               disabled={isLoading}
-              className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-3 text-sm outline-none focus:border-foreground/30"
+              className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-3 text-sm outline-none focus:border-foreground/30 focus:ring-4 focus:ring-foreground/5"
             />
           </div>
         </div>
@@ -69,7 +74,10 @@ export function LoginForm() {
             <label htmlFor="password" className="text-sm font-medium">
               Password
             </label>
-            <button type="button" className="text-xs text-muted-foreground hover:text-foreground">
+            <button
+              type="button"
+              className="text-xs text-muted-foreground hover:text-foreground"
+            >
               Forgot password?
             </button>
           </div>
@@ -78,18 +86,30 @@ export function LoginForm() {
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
+              required
+              placeholder="Enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(null);
+                setSuccess(false);
+              }}
               disabled={isLoading}
-              className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-10 text-sm outline-none focus:border-foreground/30"
+              minLength={8}
+              className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-10 text-sm outline-none focus:border-foreground/30 focus:ring-4 focus:ring-foreground/5"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="text-muted-foreground transition-colors hover:text-foreground h-4 w-4" />
+              ) : (
+                <Eye className=" text-muted-foreground focus-visible:ring transition-colors hover:text-foreground h-4 w-4" />
+              )}
             </button>
           </div>
         </div>
@@ -108,11 +128,24 @@ export function LoginForm() {
             </motion.div>
           )}
         </AnimatePresence>
+        <AnimatePresence>
+          {success && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-3 py-2.5 text-xs text-green-700"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              Signed in successfully (demo)
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Submit */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !email || !password}
           className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-foreground text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-60"
         >
           {isLoading ? (
@@ -132,14 +165,16 @@ export function LoginForm() {
       {/* Divider */}
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-border" />
-        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">or</span>
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+          or
+        </span>
         <div className="h-px flex-1 bg-border" />
       </div>
 
       {/* Google */}
       <button
         type="button"
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border text-sm font-medium transition hover:bg-secondary"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border text-sm font-medium transition-all active:scale-[0.98] hover:bg-secondary disabled:opacity-60" 
       >
         <Globe className="h-4 w-4" />
         Continue with Google
