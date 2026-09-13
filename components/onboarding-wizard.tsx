@@ -10,7 +10,7 @@ import { Globe, Sparkles, ArrowRight, Camera } from "lucide-react";
 type Step = "welcome" | "choose-path" | "website-input" | "preferences-input";
 type Path = "website" | "no-website" | null;
 
-// ---- Consistent spacing/typography tokens ----
+
 const EYEBROW =
   "font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground";
 const HEADLINE =
@@ -143,13 +143,12 @@ export function OnboardingWizard() {
     animate="show"
     exit={{ opacity: 0, y: -16, transition: { duration: 0.25 } }}
   >
-    {/* SpotlightCard modified to host the relative layout, p-[2px] thickness, and group hover state */}
     <SpotlightCard className="group relative overflow-hidden p-[2px] rounded-xl bg-muted-foreground/20">
       
-      {/* Animated Chase Layer */}
+      {/* Sir this is the Animated Chase Layer */}
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 chase-border-active" />
       
-      {/* Inner Content Mask Layer (Your original padding and text-center alignment moved here) */}
+      
       <div className="relative z-10 h-full w-full rounded-[10px] bg-background p-6 text-center sm:p-10">
         
         <motion.p variants={childVariants} className={EYEBROW}>
@@ -358,13 +357,13 @@ export function OnboardingWizard() {
     animate="show"
     exit={{ opacity: 0, y: -16, transition: { duration: 0.25 } }}
   >
-    {/* SpotlightCard modified to host the relative layout, p-[2px] thickness, and group hover state */}
+   
     <SpotlightCard className="group relative overflow-hidden p-[2px] rounded-xl bg-muted-foreground/20">
       
       {/* Animated Chase Layer */}
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 chase-border-active" />
       
-      {/* Inner Content Mask Layer (Your original padding moved here) */}
+
       <div className="relative z-10 h-full w-full rounded-[10px] bg-background p-6 sm:p-8">
         
         <motion.p variants={childVariants} className={EYEBROW}>

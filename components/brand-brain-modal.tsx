@@ -55,7 +55,7 @@ export function BrandBrainModal({ isOpen, run, onDone }: BrandBrainModalProps) {
         });
 
     return () => clearInterval(stageTimer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
 }, [isOpen]);
 
     return (
